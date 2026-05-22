@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Talent Program - Mind Map</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg-color: #050914;
+            --node-bg: #0d1323;
+            --chip-bg: #151d33;
+            --cyan: #00e5ff;
+            --purple: #b026ff;
+            --text-main: #ffffff;
+            --text-dim: #8ba1c0;
+            --border-dim: rgba(0, 229, 255, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        /* Grid Layout for exact symmetry */
+        .mindmap-grid {
+            display: grid;
+            grid-template-columns: 380px minmax(400px, 1fr) 380px;
+            grid-template-rows: repeat(4, auto);
+            gap: 2rem 4rem;
+            align-items: center;
+        }
+
+        /* Node Core Styling */
+        .node {
+            background: var(--node-bg);
+            border: 1px solid var(--border-dim);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .node:hover {
+            border-color: rgba(0, 229, 255, 0.4);
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .node-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 1.25rem;
+            text-transform: uppercase;
+        }
+
+        /* Child Keywords Layout */
+        .keyword-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .keyword {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: var(--text-dim);
+            background: var(--chip-bg);
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .keyword:hover {
+            color: #fff;
+            background: rgba(0, 229, 255, 0.1);
+            border-color: rgba(0, 229, 255, 0.3);
+        }
+
+        /* Center Main Node */
+        .main-node {
+            grid-column: 2;
+            grid-row: 1 / span 3; /* Spans rows 1-3 to sit dead center vertically */
+            background: radial-gradient(circle at center, rgba(13, 19, 35, 0.9) 0%, rgba(5, 9, 20, 0.95) 100%);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 24px;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            box-shadow: 
+                0 0 40px rgba(0, 229, 255, 0.1),
+                inset 0 0 30px rgba(176, 38, 255, 0.05);
+            animation: core-pulse 4s infinite alternate ease-in-out;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-node::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: -1px; right: -1px; bottom: -1px;
+            border-radius: 24px;
+            background: linear-gradient(45deg, var(--cyan), var(--purple));
+            z-index: -1;
+            opacity: 0.2;
+        }
+
+        @keyframes core-pulse {
+            0% { box-shadow: 0 0 30px rgba(0, 229, 255, 0.1), inset 0 0 20px rgba(176, 38, 255, 0.1); }
+            100% { box-shadow: 0 0 60px rgba(0, 229, 255, 0.25), inset 0 0 40px rgba(176, 38, 255, 0.15); }
+        }
+
+        .main-title {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, var(--cyan), var(--purple));
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .main-subtitle {
+            font-size: 1rem;
+            color: var(--text-dim);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Specific Placements & Colors */
+        .node.left { grid-column: 1; }
+        .node.right { grid-column: 3; }
+        .node.center-bottom { grid-column: 2; grid-row: 4; justify-self: center; width: 100%; max-width: 380px; }
+
+        .node.left .node-title { color: var(--cyan); text-shadow: 0 0 10px rgba(0, 229, 255, 0.4); }
+        .node.right .node-title { color: var(--purple); text-shadow: 0 0 10px rgba(176, 38, 255, 0.4); }
+        .node.center-bottom .node-title { 
+            background: linear-gradient(to right, var(--cyan), var(--purple));
+            -webkit-background-clip: text; color: transparent; 
+        }
+
+        /* Glowing Connector Lines */
+        .connector {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        .connector::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #fff;
+        }
+
+        /* Lines pointing inward from Left Col */
+        .node.left .connector {
+            top: 50%;
+            right: -2rem;
+            width: 2rem;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), transparent);
+            transform: translateY(-50%);
+        }
+        .node.left .connector::after {
+            right: 0;
+            top: -2px;
+            background: var(--cyan);
+            box-shadow: 0 0 8px var(--cyan);
+        }
+
+        /* Lines pointing inward from Right Col */
+        .node.right .connector {
+            top: 50%;
+            left: -2rem;
+            width: 2rem;
+            height: 2px;
+            background: linear-gradient(-90deg, var(--purple), transparent);
+            transform: translateY(-50%);
+        }
+        .node.right .connector::after {
+            left: 0;
+            top: -2px;
+            background: var(--purple);
+            box-shadow: 0 0 8px var(--purple);
+        }
+
+        /* Line pointing up from Bottom Center */
+        .node.center-bottom .connector {
+            top: -2rem;
+            left: 50%;
+            width: 2px;
+            height: 2rem;
+            background: linear-gradient(0deg, var(--cyan), transparent);
+            transform: translateX(-50%);
+        }
+        .node.center-bottom .connector::after {
+            top: 0;
+            left: -2px;
+            background: var(--cyan);
+            box-shadow: 0 0 8px var(--cyan);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1250px) {
+            .mindmap-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                gap: 1.5rem;
+                justify-items: center;
+            }
+            .node {
+                width: 100%;
+                max-width: 500px;
+            }
+            .main-node {
+                grid-column: 1;
+                grid-row: 1;
+                margin-bottom: 2rem;
+                width: 100%;
+                max-width: 600px;
+            }
+            .node.left, .node.right, .node.center-bottom {
+                grid-column: 1;
+                grid-row: auto;
+            }
+            /* Hide connectors on mobile for cleaner stack layout */
+            .connector {
+                display: none;
+            }
+            .main-title {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="mindmap-grid">
+            
+            <!-- LEFT COLUMN -->
+            <div class="node left" style="grid-row: 1;">
+                <div class="connector"></div>
+                <div class="node-title">Digital</div>
+                <div class="keyword-group">
+                    <span class="keyword">Data</span>
+                    <span class="keyword">Network</span>
+                    <span class="keyword">Cyber</span>
+                    <span class="keyword">System</span>
+                    <span class="keyword">Interface</span>
+                    <span class="keyword">Virtual</span>
+                    <span class="keyword">Modern</span>
+                    <span class="keyword">Technology</span>
+                </div>
+            </div>
+
+            <div class="node left" style="grid-row: 2;">
+                <div class="connector"></div>
+                <div class="node-title">Program</div>
+                <div class="keyword-group">
+                    <span class="keyword">Learning</span>
+                    <span class="keyword">Training</span>
+                    <span class="keyword">Education</span>
+                    <span class="keyword">Process</span>
+                    <span class="keyword">Collaboration</span>
+                    <span class="keyword">Community</span>
+                    <span class="keyword">Direction</span>
+                    <span class="keyword">Future</span>
+                </div>
+            </div>
+
+            <div class="node left" style="grid-row: 3;">
+                <div class="connector"></div>
+                <div class="node-title">Technology</div>
+                <div class="keyword-group">
+                    <span class="keyword">Cloud</span>
+                    <span class="keyword">IoT</span>
+                    <span class="keyword">Coding</span>
+                    <span class="keyword">Server</span>
+                    <span class="keyword">Fiber</span>
+                    <span class="keyword">Machine</span>
+                    <span class="keyword">Security</span>
+                    <span class="keyword">Engineering</span>
+                </div>
+            </div>
+
+            <div class="node left" style="grid-row: 4;">
+                <div class="connector"></div>
+                <div class="node-title">Collaboration</div>
+                <div class="keyword-group">
+                    <span class="keyword">Team</span>
+                    <span class="keyword">Connection</span>
+                    <span class="keyword">Communication</span>
+                    <span class="keyword">Support</span>
+                    <span class="keyword">Community</span>
+                    <span class="keyword">Unity</span>
+                    <span class="keyword">Partnership</span>
+                    <span class="keyword">Synergy</span>
+                </div>
+            </div>
+
+            <!-- CENTER COLUMN -->
+            <div class="main-node">
+                <div class="main-title">DIGITAL<br>TALENT<br>PROGRAM</div>
+                <div class="main-subtitle">Core Blueprint</div>
+            </div>
+
+            <div class="node center-bottom">
+                <div class="connector"></div>
+                <div class="node-title">Identity</div>
+                <div class="keyword-group" style="justify-content: center;">
+                    <span class="keyword">Dynamic</span>
+                    <span class="keyword">Futuristic</span>
+                    <span class="keyword">Minimal</span>
+                    <span class="keyword">Strong</span>
+                    <span class="keyword">Modern</span>
+                    <span class="keyword">Premium</span>
+                    <span class="keyword">Youth</span>
+                    <span class="keyword">Innovative</span>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="node right" style="grid-row: 1;">
+                <div class="connector"></div>
+                <div class="node-title">Talent</div>
+                <div class="keyword-group">
+                    <span class="keyword">Skill</span>
+                    <span class="keyword">Growth</span>
+                    <span class="keyword">Potential</span>
+                    <span class="keyword">Creativity</span>
+                    <span class="keyword">Innovation</span>
+                    <span class="keyword">Passion</span>
+                    <span class="keyword">Ability</span>
+                    <span class="keyword">Development</span>
+                </div>
+            </div>
+
+            <div class="node right" style="grid-row: 2;">
+                <div class="connector"></div>
+                <div class="node-title">Future</div>
+                <div class="keyword-group">
+                    <span class="keyword">AI</span>
+                    <span class="keyword">Automation</span>
+                    <span class="keyword">Smart</span>
+                    <span class="keyword">Vision</span>
+                    <span class="keyword">Evolution</span>
+                    <span class="keyword">Progress</span>
+                    <span class="keyword">Adaptive</span>
+                    <span class="keyword">Advance</span>
+                </div>
+            </div>
+
+            <div class="node right" style="grid-row: 3;">
+                <div class="connector"></div>
+                <div class="node-title">Creative</div>
+                <div class="keyword-group">
+                    <span class="keyword">Design</span>
+                    <span class="keyword">Branding</span>
+                    <span class="keyword">Content</span>
+                    <span class="keyword">Media</span>
+                    <span class="keyword">Visual</span>
+                    <span class="keyword">Idea</span>
+                    <span class="keyword">Motion</span>
+                    <span class="keyword">Aesthetic</span>
+                </div>
+            </div>
+
+            <div class="node right" style="grid-row: 4;">
+                <div class="connector"></div>
+                <div class="node-title">Industry</div>
+                <div class="keyword-group">
+                    <span class="keyword">Startup</span>
+                    <span class="keyword">Professional</span>
+                    <span class="keyword">Productivity</span>
+                    <span class="keyword">Career</span>
+                    <span class="keyword">Company</span>
+                    <span class="keyword">Business</span>
+                    <span class="keyword">Hustler</span>
+                    <span class="keyword">Specialist</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
